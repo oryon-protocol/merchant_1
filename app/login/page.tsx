@@ -115,10 +115,6 @@ export default function LoginPage() {
               </div>
             )}
 
-            <div className="bg-black/4 px-4 py-3 text-xs text-black/40">
-              Demo: <code className="font-mono">budi@example.com</code> / <code className="font-mono">password123</code>
-            </div>
-
             <button
               type="submit"
               disabled={isLoading}

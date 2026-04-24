@@ -57,9 +57,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     })
     const data = await res.json()
     if (!res.ok) throw new Error(data.error ?? 'Registration failed')
-
-    // auto-login after register
-    await login(email, password)
   }
 
   const logout = async () => {
