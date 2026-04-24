@@ -35,7 +35,7 @@ export default function CartSidebar({ merchant }: CartSidebarProps) {
 
   return (
     <>
-      <Card className="sticky top-24 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 shadow-lg">
+      <Card className="sticky top-24 bg-linear-to-br from-blue-50 to-blue-100 border-blue-200 shadow-lg">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2">
             <span>🛒</span> Keranjang Belanja

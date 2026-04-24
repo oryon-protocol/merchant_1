@@ -27,7 +27,14 @@ export default function ProductCard({ product, merchant }: ProductCardProps) {
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
       <CardHeader className="pb-3">
-        <div className="text-4xl mb-2">{product.image}</div>
+        <div className="relative w-full aspect-square overflow-hidden bg-[#EFEEED] mb-2">
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full h-full object-cover"
+            onError={(e) => { e.currentTarget.src = '/placeholder.jpg' }}
+          />
+        </div>
         <CardTitle className="text-lg">{product.name}</CardTitle>
         <p className="text-sm text-slate-600">{product.description}</p>
       </CardHeader>

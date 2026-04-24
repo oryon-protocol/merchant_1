@@ -12,8 +12,8 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.18 0 0);
   
-  /* Primary - Modern Indigo (Main Brand Color) */
-  --primary: oklch(0.54 0.24 264);
+  /* Primary - Empire Blue */
+  --primary: oklch(0.65 0.25 251);
   --primary-foreground: oklch(0.99 0 0);
   
   /* Secondary - Emerald (Success/Growth) */
@@ -44,8 +44,8 @@
   --chart-4: oklch(0.53 0.22 25);
   --chart-5: oklch(0.65 0.15 200);
   
-  /* Radius */
-  --radius: 0.75rem;
+  /* Radius - sharp edges */
+  --radius: 0rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -151,9 +151,6 @@
   * {
     @apply border-border outline-ring/50;
   }
-  html {
-    @apply scroll-smooth;
-  }
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "cv11" 1, "cv02" 1;
@@ -183,4 +180,17 @@
   button, a, input, select, textarea {
     @apply transition-all duration-200;
   }
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
