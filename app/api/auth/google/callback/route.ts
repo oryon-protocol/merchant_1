@@ -8,7 +8,8 @@ export async function GET(request: Request) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL!
 
   if (error || !code) {
-    return Response.redirect(`${appUrl}/login?error=google_cancelled`)
+    console.error('[Google OAuth] callback error:', error, '| code present:', !!code)
+    return Response.redirect(`${appUrl}/login?error=${error ?? 'no_code'}`)
   }
 
   // Exchange code for Google access token
