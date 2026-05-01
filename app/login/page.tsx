@@ -1,15 +1,18 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useAuth } from '@/lib/contexts/AuthContext'
 import { Input } from '@/components/ui/input'
-import { AlertCircle, ArrowRight } from 'lucide-react'
+import { AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-react'
+import { Suspense } from 'react'
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const justRegistered = searchParams.get('registered') === '1'
   const { login } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -108,6 +111,13 @@ export default function LoginPage() {
               />
             </div>
 
+            {justRegistered && !error && (
+              <div className="flex items-center gap-2 text-green-700 bg-green-50 border border-green-200 px-3 py-2 text-xs">
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
+                Akun berhasil dibuat. Silakan login.
+              </div>
+            )}
+
             {error && (
               <div className="flex items-center gap-2 text-red-600 text-xs">
                 <AlertCircle className="w-4 h-4 shrink-0" />
@@ -140,5 +150,13 @@ export default function LoginPage() {
         </motion.div>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   )
 }
