@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MOCK_MERCHANTS, MOCK_PRODUCTS } from '@/lib/mock-data'
-import { Search, ShoppingCart, Star } from 'lucide-react'
+import { Search, ShoppingCart, Star, Plus, Minus } from 'lucide-react'
 import { useAuth } from '@/lib/contexts/AuthContext'
 import { useCart } from '@/lib/contexts/CartContext'
 
@@ -12,7 +12,7 @@ const EASE = [0.25, 0.1, 0.25, 1] as const
 
 export default function ShopPage() {
   const { isAuthenticated } = useAuth()
-  const { addToCart } = useCart()
+  const { addToCart, cartItems, updateQuantity, removeFromCart } = useCart()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [scrolled, setScrolled] = useState(false)
@@ -149,6 +149,8 @@ export default function ShopPage() {
               className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
             >
               {filteredProducts.map((product, idx) => {
+                const cartItem = cartItems.find((i) => i.product.id === product.id)
+                const qty = cartItem?.quantity ?? 0
                 return (
                   <motion.div
                     key={product.id}
@@ -169,6 +171,19 @@ export default function ShopPage() {
                           Popular
                         </div>
                       )}
+                      <AnimatePresence>
+                        {qty > 0 && (
+                          <motion.div
+                            initial={{ scale: 0, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0, opacity: 0 }}
+                            transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                            className="absolute top-2.5 right-2.5 bg-[#0099FF] text-white text-[11px] font-black w-6 h-6 flex items-center justify-center"
+                          >
+                            {qty}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
 
                     <p className="text-[10px] uppercase tracking-widest text-black/35 mb-1">{product.category}</p>
@@ -191,14 +206,46 @@ export default function ShopPage() {
 
                     <div className="mt-3">
                       {isAuthenticated ? (
-                        <motion.button
-                          whileTap={{ scale: 0.97 }}
-                          onClick={() => addToCart(product, MERCHANT, 1)}
-                          className="w-full bg-black text-white py-2.5 text-[11px] uppercase tracking-widest hover:bg-[#0099FF] transition-colors flex items-center justify-center gap-2"
-                        >
-                          <ShoppingCart className="w-3.5 h-3.5" />
-                          Add to Order
-                        </motion.button>
+                        <AnimatePresence mode="wait">
+                          {qty === 0 ? (
+                            <motion.button
+                              key="add"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.15 }}
+                              whileTap={{ scale: 0.97 }}
+                              onClick={() => addToCart(product, MERCHANT, 1)}
+                              className="w-full bg-black text-white py-2.5 text-[11px] uppercase tracking-widest hover:bg-[#0099FF] transition-colors flex items-center justify-center gap-2"
+                            >
+                              <ShoppingCart className="w-3.5 h-3.5" />
+                              Add to Order
+                            </motion.button>
+                          ) : (
+                            <motion.div
+                              key="counter"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.15 }}
+                              className="flex items-center border border-black"
+                            >
+                              <button
+                                onClick={() => qty === 1 ? removeFromCart(product.id) : updateQuantity(product.id, qty - 1)}
+                                className="flex-1 flex items-center justify-center py-2.5 hover:bg-black hover:text-white transition-colors"
+                              >
+                                <Minus className="w-3.5 h-3.5" />
+                              </button>
+                              <span className="w-10 text-center text-sm font-bold tabular-nums">{qty}</span>
+                              <button
+                                onClick={() => updateQuantity(product.id, qty + 1)}
+                                className="flex-1 flex items-center justify-center py-2.5 hover:bg-black hover:text-white transition-colors"
+                              >
+                                <Plus className="w-3.5 h-3.5" />
+                              </button>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       ) : (
                         <a
                           href="/login"
